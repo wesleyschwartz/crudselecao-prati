@@ -1,0 +1,6 @@
+com\praticrud\model\Pessoa.class
+com\praticrud\view\Tela.class
+com\praticrud\controller\Controller.class
+com\praticrud\repository\DAO.class
+com\praticrud\main\Main.class
+com\praticrud\model\Aluno.class
