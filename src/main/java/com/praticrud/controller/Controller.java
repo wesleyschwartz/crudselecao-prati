@@ -71,24 +71,23 @@ public class Controller {
         //adicionar a Alunos se nota preenchido, se não adicionar a Seres
         System.out.println(
                 "\nQuer registar um Aluno? \nSe sim, informe uma nota.\t Se não, aperte enter e registre uma pessoa.");
+        boolean ok = false;
         ler.nextLine();
-        String linha = ler.nextLine();
-
-        if (linha.isEmpty()) {
-            dao.inserirPes(nome, telefone, datanascimento, datacadastro, datalastup);
-        } else {
-            Boolean not = false;
-            Double nota = 0D;
-            while (!not) {
+        while (!ok) {
+            String linha = ler.nextLine();
+            if (linha.isEmpty()) {
+                dao.inserirPes(nome, telefone, datanascimento, datacadastro, datalastup);
+                ok = true;
+            } else {
+                Double nota = 0D;
                 try {
                     nota = Double.parseDouble(linha);
-                    not = true;
+                    dao.inserirAlu(nome, telefone, datanascimento, datacadastro, datalastup, nota);
+                    ok = true;
                 } catch (NumberFormatException e) {
-                    System.out.println("Por favor, informe apenas números");
+                    System.out.println("Por favor, informe apenas números ou de ENTER...");
                 }
             }
-            dao.inserirAlu(nome, telefone, datanascimento, datacadastro, datalastup, nota);
-
         }
     }
 
@@ -102,17 +101,28 @@ public class Controller {
 
     public void atualizarDadosPes() {
         System.out.println("Informe o número de telefone da pessoa para atualizar");
-        Long antigoTel = ler.nextLong();
+        Boolean oktel = false;
+        String stelefone = "";
+        Long antigoTel = 0L;
+        while (!oktel) {
+            try {
+                stelefone = ler.next();
+                antigoTel = Long.parseLong(stelefone);
+                oktel = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, informe apenas números");
+            }
+        }
         System.out.println("Digite um novo nome");
         String novoNome = ler.next();
         System.out.println("Informe novo telefone: ");
         Boolean tel = false;
-        String stelefone = "";
+        String stelefone2 = "";
         Long novoTelefone = 0L;
         while (!tel) {
             try {
-                stelefone = ler.next();
-                novoTelefone = Long.parseLong(stelefone);
+                stelefone2 = ler.next();
+                novoTelefone = Long.parseLong(stelefone2);
                 tel = true;
             } catch (NumberFormatException e) {
                 System.out.println("Por favor, informe apenas números");
@@ -138,25 +148,34 @@ public class Controller {
         Date ddatalastup = new Date();
         ddatalastup.getTime();
         String novaDatalastup = sdf2.format(ddatalastup);
-
         dao.atualizarPes(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup);
-
     }
 
     public void atualizarDadosAlu() {
 
         System.out.println("Informe o número de telefone da pessoa para atualizar");
-        Long antigoTel = ler.nextLong();
+        Boolean oktel = false;
+        String stelefone = "";
+        Long antigoTel = 0L;
+        while (!oktel) {
+            try {
+                stelefone = ler.next();
+                antigoTel = Long.parseLong(stelefone);
+                oktel = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, informe apenas números");
+            }
+        }
         System.out.println("Digite um novo nome");
         String novoNome = ler.next();
         System.out.println("Informe novo telefone: ");
         Boolean tel = false;
-        String stelefone = "";
+        String stelefone2 = "";
         Long novoTelefone = 0L;
         while (!tel) {
             try {
-                stelefone = ler.next();
-                novoTelefone = Long.parseLong(stelefone);
+                stelefone2 = ler.next();
+                novoTelefone = Long.parseLong(stelefone2);
                 tel = true;
             } catch (NumberFormatException e) {
                 System.out.println("Por favor, informe apenas números");
@@ -184,15 +203,16 @@ public class Controller {
         String novaDatalastup = sdf2.format(ddatalastup);
         //registra nota
         System.out.println("Informe a nova nota:");
-        String linha = ler.next();
-        Boolean not = false;
+        boolean ok = false;
         Double novaNota = 0D;
-        while (!not) {
+        ler.nextLine();
+        while (!ok) {
+            String linha = ler.nextLine();
             try {
                 novaNota = Double.parseDouble(linha);
-                not = true;
+                ok = true;
             } catch (NumberFormatException e) {
-                System.out.println("Por favor, informe apenas números");
+                System.out.println("Por favor, informe apenas números...");
             }
         }
         dao.atualizarAlu(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup, novaNota);
@@ -201,13 +221,36 @@ public class Controller {
 
     public void deletarPes() {
         System.out.println("Informe o telefone para realizar exclusão");
-        Long telDelete = ler.nextLong();
+        Boolean tel = false;
+        String stelefone = "";
+        Long telDelete = 0L;
+        while (!tel) {
+            try {
+                stelefone = ler.next();
+                telDelete = Long.parseLong(stelefone);
+                tel = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, informe apenas números");
+            }
+        }
         dao.deletarPes(telDelete);
+
     }
 
     public void deletarAlu() {
         System.out.println("Informe o telefone para realizar exclusão");
-        Long telDelete = ler.nextLong();
+        Boolean tel = false;
+        String stelefone = "";
+        Long telDelete = 0L;
+        while (!tel) {
+            try {
+                stelefone = ler.next();
+                telDelete = Long.parseLong(stelefone);
+                tel = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, informe apenas números");
+            }
+        }
         dao.deletarAlu(telDelete);
     }
 }
