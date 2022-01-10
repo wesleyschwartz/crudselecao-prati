@@ -76,57 +76,52 @@ public class DAO {
         }
     }
 
-    public void atualizarPes(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup) {
+    public boolean buscaPes(Long antigoTel) {
         for (int i = 0; i < pessoas.size(); i++) {
             if (pessoas.get(i).getTelefone().equals(antigoTel)) {
-                pessoas.get(i).setNome(novoNome);
-                pessoas.get(i).setTelefone(novoTelefone);
-                pessoas.get(i).setDatanascimento(novaDatanascimento);
-                pessoas.get(i).setDatalastup(novaDatalastup);
-                System.out.println("Pessoa atualizada!");
-            } else {
-                System.out.println("Pessoa não encontrado");
+                return true;
             }
-
         }
+        return false;
     }
 
-    public void atualizarAlu(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup, Double novaNota) {
+    public boolean buscaAlu(Long antigoTel) {
         for (int i = 0; i < alunos.size(); i++) {
             if (alunos.get(i).getTelefone().equals(antigoTel)) {
-                alunos.get(i).setNome(novoNome);
-                alunos.get(i).setTelefone(novoTelefone);
-                alunos.get(i).setDatanascimento(novaDatanascimento);
-                alunos.get(i).setDatalastup(novaDatalastup);
-                alunos.get(i).setNota(novaNota);
-                System.out.println("Aluno atualizado");
-            } else {
-                System.out.println("ALuno não encontrado");
+                return true;
             }
         }
+        return false;
     }
-
+    public void atualizarPes(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup) {
+        for (int i = 0; i < pessoas.size(); i++) {
+            pessoas.get(i).setNome(novoNome);
+            pessoas.get(i).setTelefone(novoTelefone);
+            pessoas.get(i).setDatanascimento(novaDatanascimento);
+            pessoas.get(i).setDatalastup(novaDatalastup);
+            System.out.println("Pessoa atualizada!");
+        }
+    }
+    public void atualizarAlu(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup, Double novaNota) {
+        for (int i = 0; i < alunos.size(); i++) {
+            alunos.get(i).setNome(novoNome);
+            alunos.get(i).setTelefone(novoTelefone);
+            alunos.get(i).setDatanascimento(novaDatanascimento);
+            alunos.get(i).setDatalastup(novaDatalastup);
+            alunos.get(i).setNota(novaNota);
+            System.out.println("Aluno atualizado");
+        }
+    }
     public void deletarPes(Long telDelete) {
         for (int i = 0; i < pessoas.size(); i++) {
-            if (pessoas.get(i).getTelefone().equals(telDelete)) {
-                pessoas.remove(i);
-                System.out.println("Pessoa foi deletada");
-            } else {
-                System.out.println("Pessoa não encontrada");
-            }
+            pessoas.remove(i);
+            System.out.println("Pessoa deletada");
         }
-
     }
-
     public void deletarAlu(Long telDelete) {
         for (int i = 0; i < alunos.size(); i++) {
-            if (alunos.get(i).getTelefone().equals(telDelete)) {
-                alunos.remove(i);
-                System.out.println("O Aluno foi deletado");
-            } else {
-                System.out.println("Aluno não encontrado");
-            }
+            alunos.remove(i);
+            System.out.println("Aluno deletado");
         }
-
     }
 }

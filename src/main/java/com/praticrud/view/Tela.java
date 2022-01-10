@@ -21,8 +21,8 @@ public class Tela {
             op = ler.nextInt();
             switch (op) {
                 case 1:
-                    
-                    control.cadastrarDados();
+
+                    control.cadastrarDados(ler);
                     break;
 
                 case 2: //MENU GERENCIAR ALUNOS
@@ -37,11 +37,11 @@ public class Tela {
                                 break;
 
                             case 2:
-                                control.atualizarDadosAlu();
+                                control.atualizarDadosAlu(ler);
                                 break;
 
                             case 3:
-                                control.deletarAlu();
+                                control.deletarAlu(ler);
                                 break;
                             case 9:
                                 System.out.println("Voltando...");
@@ -65,11 +65,11 @@ public class Tela {
                                 break;
 
                             case 2:
-                                control.atualizarDadosPes();
+                                control.atualizarDadosPes(ler);
                                 break;
 
                             case 3:
-                                control.deletarPes();
+                                control.deletarPes(ler);
                                 break;
                             case 9:
                                 System.out.println("Voltando...");
@@ -88,6 +88,7 @@ public class Tela {
             }
 
         } while (op != 0);
+        ler.close();
     }
 
 }

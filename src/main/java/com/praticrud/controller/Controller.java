@@ -1,11 +1,9 @@
 package com.praticrud.controller;
-
 import com.praticrud.repository.DAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-
 /**
  *
  * @author wesle
@@ -13,12 +11,9 @@ import java.util.Scanner;
 public class Controller {
 
     DAO dao = new DAO();
-    Scanner ler = new Scanner(System.in);
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss");
-
-    public void cadastrarDados() {
-
+    public void cadastrarDados(Scanner ler) {
         System.out.println(
                 "Digite o nome da pessoa:");
         String nome = ler.next();
@@ -82,15 +77,18 @@ public class Controller {
                 Double nota = 0D;
                 try {
                     nota = Double.parseDouble(linha);
-                    dao.inserirAlu(nome, telefone, datanascimento, datacadastro, datalastup, nota);
-                    ok = true;
+                    if (nota >= 0 && nota <= 10) {
+                        dao.inserirAlu(nome, telefone, datanascimento, datacadastro, datalastup, nota);
+                        ok = true;
+                    } else {
+                        System.out.println("Informe números entre 0  e 10");
+                    }
                 } catch (NumberFormatException e) {
-                    System.out.println("Por favor, informe apenas números ou de ENTER...");
+                    System.out.println("Por favor, informe apenas números...");
                 }
             }
         }
     }
-
     public void listarDadosPes() {
         dao.listarPes();
     }
@@ -98,8 +96,7 @@ public class Controller {
     public void listarDadosAlu() {
         dao.listarAlu();
     }
-
-    public void atualizarDadosPes() {
+    public void atualizarDadosPes(Scanner ler) {
         System.out.println("Informe o número de telefone da pessoa para atualizar");
         Boolean oktel = false;
         String stelefone = "";
@@ -113,45 +110,50 @@ public class Controller {
                 System.out.println("Por favor, informe apenas números");
             }
         }
-        System.out.println("Digite um novo nome");
-        String novoNome = ler.next();
-        System.out.println("Informe novo telefone: ");
-        Boolean tel = false;
-        String stelefone2 = "";
-        Long novoTelefone = 0L;
-        while (!tel) {
-            try {
-                stelefone2 = ler.next();
-                novoTelefone = Long.parseLong(stelefone2);
-                tel = true;
-            } catch (NumberFormatException e) {
-                System.out.println("Por favor, informe apenas números");
+        boolean pessoaExiste = dao.buscaPes(antigoTel);
+        if (pessoaExiste == true) {
+            System.out.println("Digite um novo nome");
+            String novoNome = ler.next();
+            System.out.println("Informe novo telefone: ");
+            Boolean tel = false;
+            String stelefone2 = "";
+            Long novoTelefone = 0L;
+            while (!tel) {
+                try {
+                    stelefone2 = ler.next();
+                    novoTelefone = Long.parseLong(stelefone2);
+                    tel = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Por favor, informe apenas números");
+                }
             }
-        }
-        //registrar data de nascimento
-        System.out.println("Informe nova data de nascimento como no exemplo: 22/04/1995 || dd/MM/YYYY");
-        String pnsnasc = "";
-        Date pndnasc = null;
-        String novaDatanascimento = "";
-        Boolean pndatapronta = false;
-        while (!pndatapronta) {
-            try {
-                pnsnasc = ler.next();
-                pndnasc = sdf.parse(pnsnasc);
-                novaDatanascimento = sdf.format(pndnasc);
-                pndatapronta = true;
-            } catch (ParseException e) {
-                System.out.println("Por favor informe a data no formato correto como no exemplo: 01/01/2021 || dd/MM/YYYY");
+            //registrar data de nascimento
+            System.out.println("Informe nova data de nascimento como no exemplo: 22/04/1995 || dd/MM/YYYY");
+            String pnsnasc = "";
+            Date pndnasc = null;
+            String novaDatanascimento = "";
+            Boolean pndatapronta = false;
+            while (!pndatapronta) {
+                try {
+                    pnsnasc = ler.next();
+                    pndnasc = sdf.parse(pnsnasc);
+                    novaDatanascimento = sdf.format(pndnasc);
+                    pndatapronta = true;
+                } catch (ParseException e) {
+                    System.out.println("Por favor informe a data no formato correto como no exemplo: 01/01/2021 || dd/MM/YYYY");
+                }
             }
+            //registrar data do ultimo update
+            Date ddatalastup = new Date();
+            ddatalastup.getTime();
+            String novaDatalastup = sdf2.format(ddatalastup);
+            dao.atualizarPes(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup);
+        } else {
+            System.out.println("Pessoa não encontrada");
         }
-        //registrar data do ultimo update
-        Date ddatalastup = new Date();
-        ddatalastup.getTime();
-        String novaDatalastup = sdf2.format(ddatalastup);
-        dao.atualizarPes(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup);
     }
 
-    public void atualizarDadosAlu() {
+    public void atualizarDadosAlu(Scanner ler) {
 
         System.out.println("Informe o número de telefone da pessoa para atualizar");
         Boolean oktel = false;
@@ -166,60 +168,69 @@ public class Controller {
                 System.out.println("Por favor, informe apenas números");
             }
         }
-        System.out.println("Digite um novo nome");
-        String novoNome = ler.next();
-        System.out.println("Informe novo telefone: ");
-        Boolean tel = false;
-        String stelefone2 = "";
-        Long novoTelefone = 0L;
-        while (!tel) {
-            try {
-                stelefone2 = ler.next();
-                novoTelefone = Long.parseLong(stelefone2);
-                tel = true;
-            } catch (NumberFormatException e) {
-                System.out.println("Por favor, informe apenas números");
+        boolean alunoExiste = dao.buscaAlu(antigoTel);
+        if (alunoExiste == true) {
+            System.out.println("Digite um novo nome");
+            String novoNome = ler.next();
+            System.out.println("Informe novo telefone: ");
+            Boolean tel = false;
+            String stelefone2 = "";
+            Long novoTelefone = 0L;
+            while (!tel) {
+                try {
+                    stelefone2 = ler.next();
+                    novoTelefone = Long.parseLong(stelefone2);
+                    tel = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Por favor, informe apenas números");
+                }
             }
-        }
-        //registrar data de nascimento
-        System.out.println("Informe nova data de nascimento como no exemplo: 22/04/1995 || dd/MM/YYYY");
-        String snasc = "";
-        Date dnasc = null;
-        String novaDatanascimento = "";
-        Boolean datapronta = false;
-        while (!datapronta) {
-            try {
-                snasc = ler.next();
-                dnasc = sdf.parse(snasc);
-                novaDatanascimento = sdf.format(dnasc);
-                datapronta = true;
-            } catch (ParseException e) {
-                System.out.println("Por favor informe a data no formato correto como no exemplo: 01/01/2021 || dd/MM/YYYY");
+            //registrar data de nascimento
+            System.out.println("Informe nova data de nascimento como no exemplo: 22/04/1995 || dd/MM/YYYY");
+            String snasc = "";
+            Date dnasc = null;
+            String novaDatanascimento = "";
+            Boolean datapronta = false;
+            while (!datapronta) {
+                try {
+                    snasc = ler.next();
+                    dnasc = sdf.parse(snasc);
+                    novaDatanascimento = sdf.format(dnasc);
+                    datapronta = true;
+                } catch (ParseException e) {
+                    System.out.println("Por favor informe a data no formato correto como no exemplo: 01/01/2021 || dd/MM/YYYY");
+                }
             }
-        }
-        //registrar data do ultimo update
-        Date ddatalastup = new Date();
-        ddatalastup.getTime();
-        String novaDatalastup = sdf2.format(ddatalastup);
-        //registra nota
-        System.out.println("Informe a nova nota:");
-        boolean ok = false;
-        Double novaNota = 0D;
-        ler.nextLine();
-        while (!ok) {
-            String linha = ler.nextLine();
-            try {
-                novaNota = Double.parseDouble(linha);
-                ok = true;
-            } catch (NumberFormatException e) {
-                System.out.println("Por favor, informe apenas números...");
+            //registrar data do ultimo update
+            Date ddatalastup = new Date();
+            ddatalastup.getTime();
+            String novaDatalastup = sdf2.format(ddatalastup);
+            //registra nota
+            System.out.println("Informe a nova nota:");
+            boolean ok = false;
+            Double novaNota = 0D;
+            ler.nextLine();
+            while (!ok) {
+                String linha = ler.nextLine();
+                try {
+                    novaNota = Double.parseDouble(linha);
+                    if (novaNota >= 0 && novaNota <= 10) {
+                        dao.atualizarAlu(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup, novaNota);
+                        ok = true;
+                    } else {
+                        System.out.println("Informe números entre 0  e 10");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Por favor, informe apenas números...");
+                }
             }
+        } else {
+            System.out.println("Aluno não encontrado");
         }
-        dao.atualizarAlu(antigoTel, novoNome, novoTelefone, novaDatanascimento, novaDatalastup, novaNota);
-
     }
 
-    public void deletarPes() {
+    public void deletarPes(Scanner ler) {
+
         System.out.println("Informe o telefone para realizar exclusão");
         Boolean tel = false;
         String stelefone = "";
@@ -233,11 +244,14 @@ public class Controller {
                 System.out.println("Por favor, informe apenas números");
             }
         }
-        dao.deletarPes(telDelete);
-
+        boolean pessoaExiste = dao.buscaPes(telDelete);
+        if (pessoaExiste == true) {
+            dao.deletarPes(telDelete);
+        } else {
+            System.out.println("Pessoa não encontrada");
+        }
     }
-
-    public void deletarAlu() {
+    public void deletarAlu(Scanner ler) {
         System.out.println("Informe o telefone para realizar exclusão");
         Boolean tel = false;
         String stelefone = "";
@@ -251,6 +265,11 @@ public class Controller {
                 System.out.println("Por favor, informe apenas números");
             }
         }
-        dao.deletarAlu(telDelete);
+        boolean alunoExiste = dao.buscaAlu(telDelete);
+        if (alunoExiste == true) {
+            dao.deletarAlu(telDelete);
+        } else {
+            System.out.println("Aluno não encontrada");
+        }
     }
 }
