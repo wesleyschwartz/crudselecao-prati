@@ -1,127 +1,85 @@
 package com.praticrud.repository;
 
+import com.praticrud.controller.Controller;
 import com.praticrud.model.Aluno;
 import com.praticrud.model.Pessoa;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 /**
- *
  * @author wesle
  */
 public class DAO {
 
-    List<Pessoa> pessoas;
-    List<Aluno> alunos;
+    Controller control = new Controller();
 
-    public DAO() {
-        pessoas = new ArrayList<>();
-        alunos = new ArrayList<>();
-    }
+    AlunoDAO alunoDAO = new AlunoDAO();
+    PessoaDAO pessoaDAO = new PessoaDAO();
 
-    public void inserirPes(String nome, Long telefone, String datanascimento, String datacadastro, String datalastup) {
-        Pessoa objpes = new Pessoa();
-        objpes.setNome(nome);
-        objpes.setTelefone(telefone);
-        objpes.setDatanascimento(datanascimento);
-        objpes.setDatacadastro(datacadastro);
-        objpes.setDatalastup(datalastup);
-        pessoas.add(objpes);
-        System.out.println("Pessoa registrada...");
-    }
+    public void cadastrarDados(Scanner ler) {
 
-    public void inserirAlu(String nome, Long telefone, String datanascimento, String datacadastro, String datalastup, Double nota) {
-        Aluno objalu = new Aluno();
-        objalu.setNome(nome);
-        objalu.setTelefone(telefone);
-        objalu.setDatanascimento(datanascimento);
-        objalu.setDatacadastro(datacadastro);
-        objalu.setDatalastup(datalastup);
-        objalu.setNota(nota);
-        alunos.add(objalu);
-        System.out.println("Aluno registrado...");
-    }
+        System.out.println("Digite o nome da pessoa:");
+        String nome = ler.next();
 
-    public void listarPes() {
-        System.out.println("\n Lista de pessoas:");
-        if (pessoas.isEmpty()) {
-            System.out.println("\n Não há registro de pessoas...");
+        //registrar telefone
+        System.out.println("Informe o telefone: ");
+        long telefone = control.checkTelefone(ler);
+
+        //registrar data de nascimento
+
+        System.out.println("Informe a data de nascimento como no exemplo: 22/04/1995 || dd/MM/YYYY");
+        String dataNascimento = control.checkDataNascimento(ler);
+
+        //registrar data de cadastro
+
+        String dataCadastro = control.checkDataCadastro();
+
+        //registrar data do ultimo update
+        String dataLastUp = control.checkDataLastUp();
+
+        int id = 0;
+
+        //adicionar a Alunos se nota preenchido, se não adicionar a pessoas
+        System.out.println("\nQuer registar um Aluno? \nSe sim, informe uma nota.\t Se não, aperte enter e registre uma pessoa.");
+        ler.nextLine();
+        String linha = ler.nextLine();
+        if (linha.isEmpty()) {
+            Pessoa pessoa = new Pessoa(id, nome, telefone, dataNascimento, dataCadastro, dataLastUp);
+            pessoaDAO.pessoas.add(pessoa);
+            System.out.println("Pessoa cadastrada");
         } else {
-            for (Pessoa pessoa : pessoas) {
-                System.out.println("\t Nome: " + pessoa.getNome() + " |"
-                        + "\t| Número de telefone: " + pessoa.getTelefone() + " |"
-                        + "\t| Data de Nascimento: " + pessoa.getDatanascimento() + " |"
-                        + "\t| Data de Cadastro: " + pessoa.getDatacadastro() + " |"
-                        + "\t| Data da última alteração: " + pessoa.getDatalastup() + " |"
-                        + "\n");
-            }
+            Double nota = control.checkNota(linha, ler);
+            Aluno aluno = new Aluno(nome, telefone, dataNascimento, dataCadastro, dataLastUp, id, nota);
+            alunoDAO.alunos.add(aluno);
+            System.out.println("Aluno cadastrado");
         }
     }
 
-    public void listarAlu() {
-        System.out.println("\n Lista de alunos:");
-        if (alunos.isEmpty()) {
-            System.out.println("\n Não há registro de alunos...");
-        } else {
-            for (Aluno aluno : alunos) {
-                System.out.println("\t Nome: " + aluno.getNome() + " |"
-                        + "\t| Número de telefone: " + aluno.getTelefone() + " |"
-                        + "\t| Data de Nascimento: " + aluno.getDatanascimento() + " |"
-                        + "\t| Nota: " + aluno.getNota() + " |"
-                        + "\t| Data de Cadastro: " + aluno.getDatacadastro() + " |"
-                        + "\t| Data da última alteração: " + aluno.getDatalastup() + " |"
-                        + "\n");
-
-            }
+    public void listar(int e) {
+        if (e == 2) {
+            pessoaDAO.listar();
+        } else if (e == 1) {
+            alunoDAO.listar();
         }
     }
 
-    public boolean buscaPes(Long antigoTel) {
-        for (int i = 0; i < pessoas.size(); i++) {
-            if (pessoas.get(i).getTelefone().equals(antigoTel)) {
-                return true;
-            }
+    public void atualizarDados(int e, Scanner ler) {
+        if (e == 2) {
+            pessoaDAO.atualizarDados(ler);
+        } else if (e == 1) {
+            alunoDAO.atualizarDados(ler);
         }
-        return false;
+    }
+    public void deletar(int e, Scanner ler) {
+        if (e == 2) {
+            pessoaDAO.deletar(ler);
+        } else if (e == 1) {
+            alunoDAO.deletar(ler);
+        }
     }
 
-    public boolean buscaAlu(Long antigoTel) {
-        for (int i = 0; i < alunos.size(); i++) {
-            if (alunos.get(i).getTelefone().equals(antigoTel)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public void atualizarPes(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup) {
-        for (int i = 0; i < pessoas.size(); i++) {
-            pessoas.get(i).setNome(novoNome);
-            pessoas.get(i).setTelefone(novoTelefone);
-            pessoas.get(i).setDatanascimento(novaDatanascimento);
-            pessoas.get(i).setDatalastup(novaDatalastup);
-            System.out.println("Pessoa atualizada!");
-        }
-    }
-    public void atualizarAlu(Long antigoTel, String novoNome, Long novoTelefone, String novaDatanascimento, String novaDatalastup, Double novaNota) {
-        for (int i = 0; i < alunos.size(); i++) {
-            alunos.get(i).setNome(novoNome);
-            alunos.get(i).setTelefone(novoTelefone);
-            alunos.get(i).setDatanascimento(novaDatanascimento);
-            alunos.get(i).setDatalastup(novaDatalastup);
-            alunos.get(i).setNota(novaNota);
-            System.out.println("Aluno atualizado");
-        }
-    }
-    public void deletarPes(Long telDelete) {
-        for (int i = 0; i < pessoas.size(); i++) {
-            pessoas.remove(i);
-            System.out.println("Pessoa deletada");
-        }
-    }
-    public void deletarAlu(Long telDelete) {
-        for (int i = 0; i < alunos.size(); i++) {
-            alunos.remove(i);
-            System.out.println("Aluno deletado");
-        }
-    }
 }

@@ -1,16 +1,37 @@
 package com.praticrud.model;
 
 /**
- *
  * @author wesley
  */
 public class Pessoa {
-
+    private static Integer sequencial = 0;
+    private Integer idPessoa;
     private String nome;
     private Long telefone;
-    private String datanascimento;
-    private String datacadastro;
-    private String datalastup;
+    private String dataNascimento;
+    private String dataCadastro;
+    private String dataLastUp;
+
+    public Pessoa(Integer id, String nome, Long telefone, String dataNascimento, String dataCadastro, String dataLastUp) {
+        this.idPessoa = sequencial++;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.dataNascimento = dataNascimento;
+        this.dataCadastro = dataCadastro;
+        this.dataLastUp = dataLastUp;
+    }
+
+    public Pessoa(String nome, Long telefone, String dataNascimento, String dataCadastro, String dataLastUp) {
+        this.nome = nome;
+        this.telefone = telefone;
+        this.dataNascimento = dataNascimento;
+        this.dataCadastro = dataCadastro;
+        this.dataLastUp = dataLastUp;
+    }
+
+    public Integer getIdPessoa() {
+        return idPessoa;
+    }
 
     /**
      * @return the nome
@@ -43,43 +64,43 @@ public class Pessoa {
     /**
      * @return the datanascimento
      */
-    public String getDatanascimento() {
-        return datanascimento;
+    public String getDataNascimento() {
+        return dataNascimento;
     }
 
     /**
-     * @param datanascimento the datanascimento to set
+     * @param dataNascimento the datanascimento to set
      */
-    public void setDatanascimento(String datanascimento) {
-        this.datanascimento = datanascimento;
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     /**
      * @return the datacadastro
      */
-    public String getDatacadastro() {
-        return datacadastro;
+    public String getDataCadastro() {
+        return dataCadastro;
     }
 
     /**
-     * @param datacadastro the datacadastro to set
+     * @param dataCadastro the datacadastro to set
      */
-    public void setDatacadastro(String datacadastro) {
-        this.datacadastro = datacadastro;
+    public void setDataCadastro(String dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 
     /**
      * @return the datalastup
      */
-    public String getDatalastup() {
-        return datalastup;
+    public String getDataLastUp() {
+        return dataLastUp;
     }
 
     /**
-     * @param datalastup the datalastup to set
+     * @param dataLastUp the datalastup to set
      */
-    public void setDatalastup(String datalastup) {
-        this.datalastup = datalastup;
+    public void setDataLastUp(String dataLastUp) {
+        this.dataLastUp = dataLastUp;
     }
 
 }
